@@ -1,10 +1,11 @@
 import json
 import sqlite3
 
+#Create connection and cursor objects
 conn = sqlite3.connect('rosterdb.sqlite')
 cur = conn.cursor()
 
-# Do some setup
+#Execute database setup
 cur.executescript('''
 DROP TABLE IF EXISTS User;
 DROP TABLE IF EXISTS Member;
@@ -28,16 +29,16 @@ CREATE TABLE Member (
 )
 ''')
 
-fname = input('Enter file name: ')
-if len(fname) < 1:
-    fname = 'roster_data.json'
+#Read and parse
+#E.g. [ "Charley", "si110", 1 ], [ "Mea", "si110", 0 ]
 
-#   [ "Charley", "si110", 1 ],
-#   [ "Mea", "si110", 0 ],
+fname = 'roster_data.json'
 
 str_data = open(fname).read()
 json_data = json.loads(str_data)
 
+#Insert data into database
+#I opted to commit these queries after each iteration since there isn't a ton of data
 for entry in json_data:
 
     name = entry[0];
